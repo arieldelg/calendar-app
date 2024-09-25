@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface AUTHSTORE {
   status: "checking" | "authenticated";
@@ -42,3 +43,10 @@ export const { checking, onLogin } = authSlice.actions;
 
 /* ! esto lo qu exportamos al store*/
 export default authSlice.reducer;
+
+const STATEAUTH = (state: RootState) => state;
+
+export const STATEAUTHSELECTOR = createSelector(
+  [STATEAUTH],
+  (STATEAUTH) => STATEAUTH.auth.status
+);

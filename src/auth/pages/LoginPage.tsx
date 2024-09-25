@@ -1,8 +1,9 @@
 import { FormEvent } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 import { Navigate, NavLink } from "react-router-dom";
 // import { formValidation } from "../../helpers";
 import { Layout } from "./index";
+import { formValidation } from "../../hooks";
 // import {
 //   checkingAuthentication,
 //   startGoogleSignIn,
@@ -19,21 +20,23 @@ interface DataType {
 // function component starts here
 const LoginPage = () => {
   // typed dispatch imported from sotre/auth/store.ts
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   // typed state imported from store/auth/store.ts
-  const error = useAppSelector((state) => state.auth.errorMessage);
+  // const error = useAppSelector((state) => state.auth.errorMessage);
   const status = useAppSelector((state) => state.auth.status);
 
   //! handle funtion for login credentials
   const handleLoginCredentials = (e: FormEvent<HTMLFormElement>) => {
-    const data = formValidation({ e }) as unknown as DataType;
-    dispatch(checkingAuthentication(data, e));
+    e.preventDefault();
+    console.log("entro");
+    formValidation(e) as unknown as DataType;
+    // dispatch(checkingAuthentication(data, e));
   };
 
   //! handle funtion for login provider (google, facebook, twitter, etc..)
   const handleLoginProviders = () => {
-    dispatch(startGoogleSignIn());
+    // dispatch(startGoogleSignIn());
   };
 
   if (status === "authenticated") {
@@ -44,7 +47,7 @@ const LoginPage = () => {
     <Layout>
       <h1 className="authTitle">Login</h1>
 
-      {error ? <ErrorLayout message={error} /> : null}
+      {/* {error ? <ErrorLayout message={error} /> : null} */}
 
       <form
         name="loginCredentials"
@@ -74,6 +77,7 @@ const LoginPage = () => {
             name="password"
             placeholder="password"
             className="authInput"
+            autoComplete="off"
           />
         </div>
         <NavLink
@@ -90,7 +94,7 @@ const LoginPage = () => {
           </button>
         </NavLink>
         <button
-          disabled={status === "checking" ? true : false}
+          // disabled={status === "checking" ? true : false}
           type="submit"
           className="w-full greenButton"
         >
@@ -118,14 +122,15 @@ const LoginPage = () => {
 
       <NavLink
         to={"/auth/register"}
-        onClick={() => {
-          dispatch(resetingOk());
-        }}
+        // onClick={() => {
+        //   dispatch(resetingOk());
+        // }}
         className="bg-blue-300 w-4/5  h-10  rounded-full ring-1 ring-blue-500 hover:bg-blue-400 hover:ring-offset-2 ring-offset-blue-600 text-xl text-black/50 font-semibold hover:text-black place-content-center text-center"
       >
-        <button disabled={status === "checking" ? true : false}>
-          Register
-        </button>
+        <button>Register</button>
+      </NavLink>
+      <NavLink to={"/"} className="redButton w-4/5">
+        <button className="w-full h-full">Cancel</button>
       </NavLink>
     </Layout>
   );

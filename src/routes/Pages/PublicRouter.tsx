@@ -1,8 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
+import { STATEAUTHSELECTOR } from "../../store/slices/authSlice";
 
 const PublicRouter = () => {
-  const auth = "not-authenticated";
-  if (auth === "not-authenticated") return <Navigate to={"/auth"} />;
+  const status = useAppSelector(STATEAUTHSELECTOR);
+  if (status === "authenticated") return <Navigate to={"/calendar"} />;
   else return <Outlet />;
 };
 

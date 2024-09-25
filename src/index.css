@@ -3,5 +3,23 @@
 @tailwind utilities;
 
 .scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
+}
+
+@layer components {
+  .authTitle {
+    @apply font-mono font-bold text-4xl tracking-widest;
   }
+  .authInput {
+    @apply w-full h-8 md:h-10 px-2 rounded-md text-lg focus:outline-none border-blue-200 border focus:ring-1 focus:ring-blue-500;
+  }
+  .label {
+    @apply font-mono text-xl font-semibold;
+  }
+  .greenButton {
+    @apply h-10 rounded-full bg-green-300  ring-1 ring-green-500 hover:bg-green-400 hover:ring-offset-green-600 hover:ring-offset-2 text-xl text-black/50 font-semibold hover:text-black place-content-center text-center;
+  }
+  .redButton {
+    @apply h-10 rounded-full bg-red-300  ring-1 ring-red-500 hover:bg-red-400 hover:ring-offset-red-600 hover:ring-offset-2 text-xl text-black/50 font-semibold hover:text-black place-content-center text-center;
+  }
+}

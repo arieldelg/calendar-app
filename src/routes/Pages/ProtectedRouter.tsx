@@ -1,9 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
+import { STATEAUTHSELECTOR } from "../../store/slices/authSlice";
 
 const ProtectedRouter = () => {
-  const auth = "not-authenticated";
-  if (auth === "not-authenticated") return <Outlet />;
-  else return <Navigate to={"/calendar"} />;
+  const state = useAppSelector(STATEAUTHSELECTOR);
+  if (state === "authenticated") return <Outlet />;
+  else return <Navigate to={"/"} />;
 };
 
 export default ProtectedRouter;
