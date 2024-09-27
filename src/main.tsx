@@ -1,11 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./routes";
 import { ProtectedRouter, PublicRouter } from "./routes/Pages";
 import { CalendarApp } from "./calendar/pages";

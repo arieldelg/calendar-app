@@ -1,9 +1,15 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
 import { STATEAUTHSELECTOR } from "../store/slices/authSlice";
+import useCheckJWT from "../hooks/useCheckJWT";
+import { useEffect } from "react";
 
 const Root = () => {
   const state = useAppSelector(STATEAUTHSELECTOR);
+  const { startRenew } = useCheckJWT();
+  useEffect(() => {
+    startRenew();
+  }, [startRenew]);
   return (
     <section className="w-screen h-screen grid grid-rows-[5rem_auto]">
       <header className="w-full h-full bg-slate-200 px-4">

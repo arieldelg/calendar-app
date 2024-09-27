@@ -39,7 +39,6 @@ export const authSlice = createSlice({
     },
     responseError: (state, action: PayloadAction<string | undefined>) => {
       state.errorMessage = action.payload;
-      state.status = "unAuthenticated";
     },
     onLogout: (state) => {
       state.status = "unAuthenticated";
