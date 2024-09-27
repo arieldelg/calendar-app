@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { getEnvVariables } from "../helpers";
 
 const { VITE_API_URL } = getEnvVariables();
@@ -8,5 +8,13 @@ const calendarApi = axios.create({
 });
 
 // TODO: configurar interceptores
+
+calendarApi.interceptors.request.use((config) => {
+  config.headers = {
+    ...config.headers,
+    "x-token": localStorage.getItem("token"),
+  } as unknown as AxiosHeaders;
+  return config;
+});
 
 export default calendarApi;

@@ -7,7 +7,7 @@ interface AUTHSTORE {
   errorMessage: undefined | string;
 }
 
-interface USER {
+export interface USER {
   name: string;
   _uid: string;
 }
@@ -41,11 +41,16 @@ export const authSlice = createSlice({
       state.errorMessage = action.payload;
       state.status = "unAuthenticated";
     },
+    onLogout: (state) => {
+      state.status = "unAuthenticated";
+      state.errorMessage = undefined;
+      state.user = undefined;
+    },
   },
 });
 
 /*!exportamos las acciones del slice*/
-export const { checking, onLogin, responseError } = authSlice.actions;
+export const { checking, onLogin, responseError, onLogout } = authSlice.actions;
 
 /* ! esto lo qu exportamos al store*/
 export default authSlice.reducer;
