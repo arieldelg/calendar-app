@@ -1,13 +1,15 @@
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Layout } from "./index";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { useValidateForm } from "../../hooks";
 import { startLoginUser } from "../../store/authThunk/thunks";
+import { ERRORESPONSEAUTH, responseError } from "../../store/slices/authSlice";
 
 // function component starts here
 const LoginPage = () => {
   const dispatch = useAppDispatch();
+  const errorResponse = useAppSelector(ERRORESPONSEAUTH);
   const status = useAppSelector((state) => state.auth.status);
 
   const { validateFormData, errors, handleErrors } = useValidateForm();
@@ -19,15 +21,19 @@ const LoginPage = () => {
     dispatch(startLoginUser(values));
   };
 
-  if (status === "authenticated") {
-    return <Navigate to={"/journal"} />;
-  }
+  useEffect(() => {
+    dispatch(responseError(undefined));
+  }, [dispatch]);
 
   return (
     <Layout>
       <h1 className="authTitle">Login</h1>
 
-      {/* {error ? <ErrorLayout message={error} /> : null} */}
+      {errorResponse ? (
+        <p className="text-center text-red-500 text-lg font-bold font-mono">
+          {errorResponse}
+        </p>
+      ) : null}
 
       <form
         onSubmit={handleSubmit}
@@ -84,28 +90,10 @@ const LoginPage = () => {
             </p>
           </button>
         </NavLink>
-        <button
-          // disabled={status === "checking" ? true : false}
-          type="submit"
-          className="w-full greenButton"
-        >
+        <button type="submit" className="w-full greenButton">
           Login
         </button>
       </form>
-
-      {/* <form
-        className="w-4/5"
-        name="loginProvider"
-        onSubmit={() => handleLoginProviders()}
-      >
-        <button
-          disabled={status === "checking" ? true : false}
-          type="submit"
-          className="w-full h-10 rounded-full bg-orange-300 ring-1 ring-orange-500 hover:bg-orange-400 hover:ring-offset-orange-600 hover:ring-offset-2 text-xl text-black/50 font-semibold hover:text-black place-content-center text-center"
-        >
-          Google
-        </button>
-      </form> */}
 
       <hr className=" border-black/20 w-full" />
 

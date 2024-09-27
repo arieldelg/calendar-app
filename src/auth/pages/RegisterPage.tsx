@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { Layout } from "./index";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 
 import { useValidateForm } from "../../hooks";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { startRegisterUser } from "../../store/authThunk/thunks";
 import { VariablesAuth } from "../../Types";
-import { ERRORESPONSEAUTH } from "../../store/slices/authSlice";
+import { ERRORESPONSEAUTH, responseError } from "../../store/slices/authSlice";
 // import { useAppDispatch } from "../../store/hooks";
 
 // interface ResponseAction {
@@ -34,6 +34,10 @@ const RegisterPage = () => {
     if (!values) return;
     dispatch(startRegisterUser(values));
   };
+
+  useEffect(() => {
+    dispatch(responseError(undefined));
+  }, [dispatch]);
 
   return (
     <Layout>

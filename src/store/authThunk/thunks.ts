@@ -19,7 +19,6 @@ export const startRegisterUser = (userData: RegisterCredentials) => {
     } catch (error) {
       const { response } = error as { response: AxiosResponse };
       dispatch(responseError(response.data.message));
-      console.log(response.data.message);
     }
   };
 };
@@ -42,6 +41,5 @@ export const startLoginUser = (userData: RegisterCredentials) => {
       const { response } = error as { response: AxiosResponse };
       dispatch(responseError(response.data.message));
     }
-    console.log(userData);
   };
 };
