@@ -1,7 +1,12 @@
 import { AxiosResponse } from "axios";
 import { calendarApi } from "../../api";
 import { RegisterCredentials } from "../../Types";
-import { checking, onLogin, responseError } from "../slices/authSlice";
+import {
+  checking,
+  onLogin,
+  onLogout,
+  responseError,
+} from "../slices/authSlice";
 
 export const startRegisterUser = (userData: RegisterCredentials) => {
   return async (
@@ -41,5 +46,14 @@ export const startLoginUser = (userData: RegisterCredentials) => {
       const { response } = error as { response: AxiosResponse };
       dispatch(responseError(response.data.message));
     }
+  };
+};
+
+export const startLogoutUser = () => {
+  return async (
+    dispatch: (arg0: { payload: undefined; type: "auth/onLogout" }) => void
+  ) => {
+    localStorage.clear();
+    dispatch(onLogout());
   };
 };
