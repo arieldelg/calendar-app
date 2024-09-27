@@ -2,15 +2,14 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 interface AUTHSTORE {
-  status: "checking" | "authenticated";
+  status: "checking" | "authenticated" | "unAuthenticated";
   user: USER | undefined;
-  errorMessage: undefined;
+  errorMessage: undefined | string;
 }
 
 interface USER {
   name: string;
   _uid: string;
-  token: string;
 }
 
 /*!initialState*/
@@ -35,18 +34,31 @@ export const authSlice = createSlice({
       state.user = action.payload;
       state.errorMessage = undefined;
     },
+    saveUser: (state, action: PayloadAction<USER>) => {
+      state.user = action.payload;
+    },
+    responseError: (state, action: PayloadAction<string>) => {
+      state.errorMessage = action.payload;
+      state.status = "unAuthenticated";
+    },
   },
 });
 
 /*!exportamos las acciones del slice*/
-export const { checking, onLogin } = authSlice.actions;
+export const { checking, onLogin, responseError } = authSlice.actions;
 
 /* ! esto lo qu exportamos al store*/
 export default authSlice.reducer;
 
 const STATEAUTH = (state: RootState) => state;
+const ERRORRESPONSE = (state: RootState) => state;
 
 export const STATEAUTHSELECTOR = createSelector(
   [STATEAUTH],
   (STATEAUTH) => STATEAUTH.auth.status
+);
+
+export const ERRORESPONSEAUTH = createSelector(
+  [ERRORRESPONSE],
+  (ERRORRESPONSE) => ERRORRESPONSE.auth.errorMessage
 );

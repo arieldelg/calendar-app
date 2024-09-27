@@ -9,7 +9,7 @@ import {
 import { Root } from "./routes";
 import { ProtectedRouter, PublicRouter } from "./routes/Pages";
 import { CalendarApp } from "./calendar/pages";
-import { saveNewUser, saveUpdateNote } from "./routes/actions";
+import { saveUpdateNote } from "./routes/actions";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { LoginPage, RegisterPage } from "./auth/pages";
@@ -48,7 +48,6 @@ const router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />,
-            action: saveNewUser,
           },
         ],
       },

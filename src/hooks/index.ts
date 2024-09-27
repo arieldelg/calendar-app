@@ -1,3 +1,3 @@
-import formValidation from "./useFormValidation";
+import useValidateForm from "./useValidateForm";
 
-export { formValidation };
+export { useValidateForm };

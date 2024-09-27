@@ -1,79 +1,74 @@
-import {
-  Form,
-  // Navigate,
-  NavLink,
-  useActionData,
-} from "react-router-dom";
-// import { FormEvent } from "react";
-// import { ErrorLayout } from "../components";
-// import { formValidation } from "../../helpers";
-// import {
-//   useAppDispatch,
-//   //  useAppSelector
-// } from "../../store/hooks";
+import { NavLink } from "react-router-dom";
 import { Layout } from "./index";
-// import { formValidation } from "../../hooks";
+import { FormEvent } from "react";
 
-// interface DataType {
-//   email: string;
-//   userName: string;
-//   password: string;
+import { useValidateForm } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { startRegisterUser } from "../../store/authThunk/thunks";
+import { VariablesAuth } from "../../Types";
+import { ERRORESPONSEAUTH } from "../../store/slices/authSlice";
+// import { useAppDispatch } from "../../store/hooks";
+
+// interface ResponseAction {
+//   error: boolean;
+//   errorMessage: string | undefined;
+//   data: {
+//     message: string;
+//     ok: boolean;
+//     token: string;
+//     user: {
+//       insertedId: string;
+//     };
+//   };
 // }
 
-interface ErrorAuth {
-  error: boolean;
-  errorMessage: string;
-}
-
 const RegisterPage = () => {
-  const error = useActionData() as ErrorAuth;
-  // use dispatch and selector typed
-  // const dispatch = useAppDispatch();
-  // const error = useAppSelector((state) => state.auth.errorMessage);
-  // const ok = useAppSelector((state) => state.auth.ok);
+  const dispatch = useAppDispatch();
+  const errorResponse = useAppSelector(ERRORESPONSEAUTH);
+  //* custom hook to validate form data
+  const { handleErrors, errors, validateFormData } = useValidateForm();
 
-  // function that handles formData
-  // const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
-  //   // const data = formValidation(e) as unknown as DataType;
-  //   // dispatch(startRegisterCredentials(data, e));
-
-  //   // console.log(ok);
-  // };
-
-  // if (ok) {
-  //   console.log(ok);
-  //   return <Navigate to={"/auth/login"} />;
-  // }
+  const handleForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const values = validateFormData(e);
+    if (!values) return;
+    dispatch(startRegisterUser(values));
+  };
 
   return (
     <Layout>
       <h1 className="authTitle">Register</h1>
 
-      {error?.error ? (
-        <p className="text-red-600 font-mono font-bold text-lg tracking-tighter">
-          {error.errorMessage}
+      {errorResponse ? (
+        <p className="text-red-500 text-center text-lg font-mono font-bold">
+          {errorResponse}
         </p>
       ) : null}
 
-      <Form
-        method="post"
-        className="flex flex-col justify-center w-4/5 space-y-7"
-        // onSubmit={(e) => handleSumbit(e)}
-        name="register"
+      <form
+        className="flex flex-col justify-center w-4/5"
+        onSubmit={handleForm}
       >
-        <div className="w-full">
-          <label htmlFor="userName" className="label">
+        <div className="w-full h-24 ">
+          <label htmlFor="name" className="label">
             User Name
           </label>
           <input
-            id="userName"
+            id="name"
             type="text"
-            name="userName"
-            placeholder="username"
-            className="authInput"
+            name="name"
+            placeholder="name"
+            onChange={(e) => handleErrors(VariablesAuth.NAME, e.target.value)}
+            className={`authInput ${
+              errors?.name ? "ring-2 ring-red-500" : null
+            }`}
           />
+
+          {errors.name ? (
+            <p className="text-red-500 text-sm pt-1">{errors?.name}</p>
+          ) : null}
         </div>
-        <div className="w-full">
+        <div className="w-full h-24">
           <label htmlFor="email" className="label">
             Email
           </label>
@@ -82,10 +77,16 @@ const RegisterPage = () => {
             type="email"
             name="email"
             placeholder="email@example.com"
-            className="authInput"
+            onChange={(e) => handleErrors(VariablesAuth.EMAIL, e.target.value)}
+            className={`authInput ${
+              errors?.email ? "ring-2 ring-red-500" : null
+            }`}
           />
+          {errors?.email ? (
+            <p className="text-red-500 text-sm pt-1">{errors.email}</p>
+          ) : null}
         </div>
-        <div className="w-full">
+        <div className="w-full h-24">
           <label htmlFor="password" className="label">
             Enter Password
           </label>
@@ -94,11 +95,22 @@ const RegisterPage = () => {
             type="password"
             name="password"
             placeholder="password"
-            className="authInput"
+            onChange={(e) =>
+              handleErrors(VariablesAuth.PASSWORD, e.target.value)
+            }
+            className={`authInput ${
+              errors?.password ? "ring-2 ring-red-500" : null
+            }`}
             autoComplete="off"
           />
+          {errors?.password ? (
+            <p className="text-red-500 text-sm pt-1">{errors.password}</p>
+          ) : null}
         </div>
-        <div className="w-full">
+        {
+          //? is it necesary an input to confirm password
+        }
+        {/* <div className="w-full h-24">
           <label htmlFor="confirmPassword" className="label">
             Confirm Password
           </label>
@@ -107,12 +119,15 @@ const RegisterPage = () => {
             type="password"
             name="confirmPassword"
             placeholder="confirm password"
-            className="authInput"
+            onChange={(e) => handleErrors('confirmPassword', e.target.value)}
+            className={`authInput ${errors.confirmPassword ? 'ring-2 ring-red-500' : null}`}
             autoComplete="off"
           />
-        </div>
-        <hr className="border-black/20 w-full" />
-        <div className="flex flex-col md:flex-row justify-between items-center w-full h-30 md:space-x-4 md:space-y-0 space-y-6">
+          {errors?.confirmPassword ? <p className="text-red-500 text-sm pt-1">{errors.confirmPassword}</p>: null}
+
+        </div> */}
+        <hr className="border-black/20 w-full mt-2" />
+        <div className="flex flex-col md:flex-row justify-between items-center w-full h-30 md:space-x-4 md:space-y-0 space-y-6 mt-8 mb-4">
           <button
             className="w-full md:w-1/2 h-10 rounded-full bg-green-300  ring-1 ring-green-500 hover:bg-green-400 hover:ring-offset-green-600 hover:ring-offset-2 text-xl text-black/50 font-semibold hover:text-black place-content-center text-center"
             type="submit"
@@ -123,7 +138,7 @@ const RegisterPage = () => {
             Cancel
           </NavLink>
         </div>
-      </Form>
+      </form>
     </Layout>
   );
 };

@@ -1,42 +1,22 @@
-import { FormEvent } from "react";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { Navigate, NavLink } from "react-router-dom";
-// import { formValidation } from "../../helpers";
 import { Layout } from "./index";
-import { formValidation } from "../../hooks";
-// import {
-//   checkingAuthentication,
-//   startGoogleSignIn,
-// } from "../../store/auth/thunk";
-// import { ErrorLayout } from "../components";
-// import { resetingOk } from "../../store/auth/authSlice";
-
-interface DataType {
-  email: string;
-  userName?: string;
-  password: string;
-}
+import { FormEvent } from "react";
+import { useValidateForm } from "../../hooks";
+import { startLoginUser } from "../../store/authThunk/thunks";
 
 // function component starts here
 const LoginPage = () => {
-  // typed dispatch imported from sotre/auth/store.ts
-  // const dispatch = useAppDispatch();
-
-  // typed state imported from store/auth/store.ts
-  // const error = useAppSelector((state) => state.auth.errorMessage);
+  const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.auth.status);
 
-  //! handle funtion for login credentials
-  const handleLoginCredentials = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("entro");
-    formValidation(e) as unknown as DataType;
-    // dispatch(checkingAuthentication(data, e));
-  };
+  const { validateFormData, errors, handleErrors } = useValidateForm();
 
-  //! handle funtion for login provider (google, facebook, twitter, etc..)
-  const handleLoginProviders = () => {
-    // dispatch(startGoogleSignIn());
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const values = validateFormData(e);
+    if (!values) return;
+    dispatch(startLoginUser(values));
   };
 
   if (status === "authenticated") {
@@ -50,11 +30,10 @@ const LoginPage = () => {
       {/* {error ? <ErrorLayout message={error} /> : null} */}
 
       <form
-        name="loginCredentials"
-        onSubmit={(e) => handleLoginCredentials(e)}
+        onSubmit={handleSubmit}
         className="flex flex-col items-center w-4/5 space-y-4"
       >
-        <div className="w-full h-18 flex flex-col space-y-2">
+        <div className="w-full h-24 flex flex-col">
           <label htmlFor="email" className="label">
             Enter email
           </label>
@@ -63,11 +42,17 @@ const LoginPage = () => {
             type="email"
             name="email"
             placeholder="email@example.com"
-            className="authInput"
+            className={`authInput ${
+              errors?.email ? "ring-2 ring-red-500" : null
+            }`}
             autoComplete="email"
+            onChange={(e) => handleErrors("email", e.target.value)}
           />
+          {errors?.email ? (
+            <p className="text-sm text-red-500 pt-1">{errors.email}</p>
+          ) : null}
         </div>
-        <div className="w-full h-18 flex flex-col space-y-2">
+        <div className="w-full h-24 flex flex-col">
           <label htmlFor="password" className="label">
             Enter password
           </label>
@@ -76,9 +61,15 @@ const LoginPage = () => {
             type="password"
             name="password"
             placeholder="password"
-            className="authInput"
+            className={`authInput ${
+              errors?.password ? "ring-2 ring-red-500" : null
+            }`}
             autoComplete="off"
+            onChange={(e) => handleErrors("password", e.target.value)}
           />
+          {errors?.password ? (
+            <p className="text-sm text-red-500 pt-1">{errors.password}</p>
+          ) : null}
         </div>
         <NavLink
           className="w-auto flex items-center justify-center"
@@ -102,7 +93,7 @@ const LoginPage = () => {
         </button>
       </form>
 
-      <form
+      {/* <form
         className="w-4/5"
         name="loginProvider"
         onSubmit={() => handleLoginProviders()}
@@ -114,7 +105,7 @@ const LoginPage = () => {
         >
           Google
         </button>
-      </form>
+      </form> */}
 
       <hr className=" border-black/20 w-full" />
 
