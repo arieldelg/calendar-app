@@ -1,22 +1,19 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { STATEAUTHSELECTOR } from "../store/slices/authSlice";
-import useCheckJWT from "../hooks/useCheckJWT";
-import { useEffect } from "react";
+import { STATEAUTHSELECTOR, USERDATASELECTOR } from "../store/slices/authSlice";
+
 import { startLogoutUser } from "../store/authThunk/thunks";
 
 const Root = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector(STATEAUTHSELECTOR);
-  const { startRenew } = useCheckJWT();
-  useEffect(() => {
-    startRenew();
-  }, [startRenew]);
+  const user = useAppSelector(USERDATASELECTOR);
+
   return (
     <section className="w-screen h-screen grid grid-rows-[5rem_auto]">
       <header className="w-full h-full bg-slate-200 px-4">
         <nav className="flex items-center justify-between  w-full h-full">
-          <h1>Calendar App</h1>
+          <h1>{user?.name ? user.name : <span>CalendarApp</span>}</h1>
 
           {state === "authenticated" ? (
             <button

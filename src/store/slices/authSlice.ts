@@ -56,6 +56,7 @@ export default authSlice.reducer;
 
 const STATEAUTH = (state: RootState) => state;
 const ERRORRESPONSE = (state: RootState) => state;
+const USERDATA = (state: RootState) => state;
 
 export const STATEAUTHSELECTOR = createSelector(
   [STATEAUTH],
@@ -65,4 +66,9 @@ export const STATEAUTHSELECTOR = createSelector(
 export const ERRORESPONSEAUTH = createSelector(
   [ERRORRESPONSE],
   (ERRORRESPONSE) => ERRORRESPONSE.auth.errorMessage
+);
+
+export const USERDATASELECTOR = createSelector(
+  [USERDATA],
+  (USERDATA) => USERDATA.auth.user
 );
