@@ -9,3 +9,10 @@ export enum VariablesAuth {
   EMAIL = "email",
   PASSWORD = "password",
 }
+
+export interface FormValues {
+  endDate: Date;
+  text: string;
+  startDate: Date;
+  title: string;
+}

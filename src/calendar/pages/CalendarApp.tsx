@@ -12,7 +12,7 @@ import { setActiveNote } from "../../store/slices/calendarSlice";
 
 export interface DataEvent {
   title: string;
-  notes: string;
+  text: string;
   start: object;
   end: object;
   bgColor: string;
@@ -51,7 +51,6 @@ const CalendarApp = () => {
   const [view] = useState(localStorage.getItem("lastView") || "week");
   const openModal = useAppSelector(IsOpenModal);
   const dispatch = useAppDispatch();
-  // const [open, setOpen] = useState<boolean>(false);
   const doubleClick = (event: DataEvent) => {
     const start = JSON.stringify(event.start);
     const end = JSON.stringify(event.end);
@@ -63,9 +62,7 @@ const CalendarApp = () => {
     dispatch(setActiveNote(data));
     dispatch(openUI());
   };
-  // // const oneClick = (props: event) => {
-  // //   dispatch(openUI());
-  // };
+
   const viewChange = (event: string) => {
     localStorage.setItem("lastView", event);
   };

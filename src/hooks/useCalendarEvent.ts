@@ -9,10 +9,12 @@ const useCalendarEvent = (): {
   const dispatch = useAppDispatch();
   const active = useAppSelector(ActiveStateSelector);
 
+  //* function that is triggered when creating a new Note
   const createNewForm = () => {
     dispatch(newNote());
   };
 
+  //* event comes from an active note return existing values
   let data = {};
   if (active) {
     const startParse = JSON.parse(active?.start as string);

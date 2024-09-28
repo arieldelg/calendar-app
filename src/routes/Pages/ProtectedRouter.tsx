@@ -8,7 +8,6 @@ const ProtectedRouter = () => {
   const { startRenew } = useCheckJWT();
   const state = useAppSelector(STATEAUTHSELECTOR);
   useEffect(() => {
-    console.log("ejecuto");
     startRenew();
   }, [startRenew]);
 
