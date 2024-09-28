@@ -4,17 +4,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale/es";
 import useUiStore from "../../hooks/useUiStore";
 import useCalendarEvent from "../../hooks/useCalendarEvent";
-import { DataEvent } from "./CalendarApp";
 import { addHours, differenceInSeconds } from "date-fns";
-import { FormValues } from "../../Types";
+import { EventNote, FormValues } from "../../Types";
 import { useAppDispatch } from "../../store/hooks";
-import { startSavingNote } from "../../store/calendarThunk/thunk";
+import {
+  startSavingNote,
+  startUpdatingNote,
+} from "../../store/calendarThunk/thunk";
 registerLocale("es", es);
 
 const Note = () => {
   const dispatch = useAppDispatch();
   const { closeModal } = useUiStore();
-  const { data } = useCalendarEvent() as { data: DataEvent };
+  const { data } = useCalendarEvent() as unknown as { data: EventNote };
 
   const [error, setError] = useState<{
     ok: boolean;
@@ -26,9 +28,9 @@ const Note = () => {
     errorText: "",
   });
 
-  const [stateDate, setStateDate] = useState({
-    startDate: data?.start || new Date(),
-    endDate: data?.end || addHours(new Date(), +2),
+  const [state, setState] = useState({
+    start: data?.start || new Date(),
+    end: data?.end || addHours(new Date(), +2),
     title: data?.title || "",
     text: data?.text || "",
   });
@@ -40,12 +42,10 @@ const Note = () => {
       formData
     ) as unknown as FormValues;
 
-    const endDate = new Date(stateDate.endDate as unknown as string).getTime();
-    const startDate = new Date(
-      stateDate.startDate as unknown as string
-    ).getTime();
+    const end = new Date(state.end as unknown as string).getTime();
+    const start = new Date(state.start as unknown as string).getTime();
 
-    const difference = differenceInSeconds(endDate, startDate);
+    const difference = differenceInSeconds(end, start);
 
     const errorObject = {
       errorDate: "",
@@ -78,14 +78,25 @@ const Note = () => {
       ...errorObject,
     });
 
-    const data = {
-      startDate,
-      endDate,
+    const noteData = {
       text,
       title,
+      start: new Date(start),
+      end: new Date(end),
     };
 
-    dispatch(startSavingNote(data as unknown as FormValues));
+    if (data) {
+      const updatedData = {
+        ...data,
+        ...noteData,
+      };
+
+      dispatch(startUpdatingNote(updatedData));
+      console.log("no entro");
+      return;
+    }
+
+    dispatch(startSavingNote(noteData as unknown as FormValues));
   };
 
   return (
@@ -117,7 +128,7 @@ const Note = () => {
               <div className="flex flex-col py-2 gap-1">
                 <label className="text-xl ">Fecha y hora inicio</label>
                 <DatePicker
-                  selected={stateDate.startDate as Date}
+                  selected={state.start as Date}
                   name="startDate"
                   className="h-7 ring-1 px-2 rounded-md focus:outline-blue-400 w-full text-center"
                   dateFormat={"Pp"}
@@ -125,9 +136,9 @@ const Note = () => {
                   locale={"es"}
                   timeCaption="Hora"
                   onChange={(date) =>
-                    setStateDate((prev) => ({
+                    setState((prev) => ({
                       ...prev,
-                      startDate: date as Date,
+                      start: date as Date,
                     }))
                   }
                 />
@@ -136,8 +147,8 @@ const Note = () => {
               <div className="flex flex-col py-2 gap-2">
                 <label className="text-xl">Fecha y hora fin</label>
                 <DatePicker
-                  minDate={stateDate.startDate as Date}
-                  selected={stateDate.endDate as Date}
+                  minDate={state.start as Date}
+                  selected={state.end as Date}
                   name="endDate"
                   className="h-7 ring-1 px-2 rounded-md focus:outline-blue-400 w-full text-center"
                   dateFormat={"Pp"}
@@ -145,9 +156,9 @@ const Note = () => {
                   locale={"es"}
                   timeCaption="Hora"
                   onChange={(date) =>
-                    setStateDate((prev) => ({
+                    setState((prev) => ({
                       ...prev,
-                      endDate: date as Date,
+                      end: date as Date,
                     }))
                   }
                 />
@@ -168,7 +179,7 @@ const Note = () => {
                 placeholder="Título del evento"
                 name="title"
                 autoComplete="off"
-                defaultValue={stateDate.title}
+                defaultValue={state.title}
               />
             </div>
 
@@ -178,7 +189,7 @@ const Note = () => {
                 placeholder="Notas"
                 rows={5}
                 name="text"
-                defaultValue={stateDate.text}
+                defaultValue={state.text}
               ></textarea>
             </div>
           </div>

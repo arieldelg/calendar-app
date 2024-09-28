@@ -1,9 +1,9 @@
-import { DataEvent } from "../pages/CalendarApp";
+import { EventNote } from "../../Types";
 
 interface ComponentEvent {
   continuesAfter: boolean;
   continuesPrior: boolean;
-  event: DataEvent;
+  event: EventNote;
   isAllDay: boolean | undefined;
   slotEnd: object;
   slotStart: object;
@@ -14,7 +14,7 @@ const CalendarEvent = ({ event }: ComponentEvent) => {
   return (
     <section>
       <p>
-        {event.title} - {event.user.name}
+        {event.title} - {event.name}
       </p>
     </section>
   );

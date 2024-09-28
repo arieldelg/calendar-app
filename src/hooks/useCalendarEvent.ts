@@ -1,36 +1,52 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { ActiveStateSelector, newNote } from "../store/slices/calendarSlice";
-import { DataEvent } from "../calendar/pages/CalendarApp";
+import {
+  ActiveStateSelector,
+  EVENTSNOTES,
+  getEvents,
+  newNote,
+} from "../store/slices/calendarSlice";
+import { EventNote } from "../Types";
+import { calendarApi } from "../api";
 
 const useCalendarEvent = (): {
-  data: DataEvent | object;
+  data: EventNote | null;
   createNewForm: () => void;
+  events: EventNote[];
+  eventsData: () => void;
 } => {
   const dispatch = useAppDispatch();
   const active = useAppSelector(ActiveStateSelector);
-
+  const events = useAppSelector(EVENTSNOTES);
   //* function that is triggered when creating a new Note
   const createNewForm = () => {
     dispatch(newNote());
   };
+  console.log(events);
+  const eventsData = async () => {
+    try {
+      const {
+        data: { data },
+      } = (await calendarApi.get("/calendarEvents")) as {
+        data: { data: EventNote[] };
+      };
 
-  //* event comes from an active note return existing values
-  let data = {};
-  if (active) {
-    const startParse = JSON.parse(active?.start as string);
-    const endParse = JSON.parse(active?.end as string);
-    const start = new Date(startParse);
-    const end = new Date(endParse);
-    data = {
-      ...active,
-      start,
-      end,
-    };
-  }
+      data.map((element) => {
+        element.start = new Date(element.start);
+        element.end = new Date(element.end);
+        return element;
+      });
+
+      dispatch(getEvents(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return {
-    data,
+    data: active,
     createNewForm,
+    events,
+    eventsData,
   };
 };
 
