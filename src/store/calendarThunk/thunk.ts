@@ -1,7 +1,8 @@
 import { calendarApi } from "../../api";
 import { EventNote } from "../../Types";
-import { saveEvent, updateEvent } from "../slices/calendarSlice";
+import { deleteNote, saveEvent, updateEvent } from "../slices/calendarSlice";
 import { closeUI } from "../slices/uiSlice";
+import { RootState } from "../store";
 
 export const startSavingNote = (note: { text: string, title: string, start: number, end: number}) => {
   return async (
@@ -51,3 +52,27 @@ export const startUpdatingNote = (note: EventNote) => {
     dispatch(closeUI());
   };
 };
+
+export const startDeleteNote = (idNote: string) => { 
+  return async (dispatch: (
+    arg0: 
+      { 
+        payload: EventNote[]; 
+        type: "calendar/deleteNote"; 
+      }
+    ) => void,
+    getState: () => RootState
+  ) => {
+    const events = getState().calendar.events
+
+    const newEvents = events.filter((note) => note._id !== idNote)
+    dispatch(deleteNote(newEvents))
+
+    try {
+      await calendarApi.delete(`calendarEvents/delete/${idNote}`)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+ }

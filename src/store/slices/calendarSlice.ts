@@ -50,11 +50,14 @@ export const calendarSlice = createSlice({
         return element;
       });
     },
+    deleteNote: (state, action: PayloadAction<EventNote[]>) => {
+      state.events = action.payload
+    }
   },
 });
 
 /*!exportamos las acciones del slice*/
-export const { saveEvent, setActiveNote, newNote, updateEvent, getEvents } =
+export const { saveEvent, setActiveNote, newNote, updateEvent, getEvents, deleteNote } =
   calendarSlice.actions;
 
 /* ! esto lo qu exportamos al store*/

@@ -1,7 +1,7 @@
 import { Calendar, EventProps, View } from "react-big-calendar";
 import { localizer, getMessage } from "../../helpers";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { ButtonNewNote, CalendarEvent } from "../components";
+import { ButtonDelete, ButtonNewNote, CalendarEvent } from "../components";
 import { ComponentType, useEffect, useState } from "react";
 import { Modal } from "../../UI";
 import { Note } from "./index";
@@ -25,6 +25,7 @@ export interface DataEvent {
 
 const CalendarApp = () => {
   const [view] = useState(localStorage.getItem("lastView") || "week");
+  const [selected, setSelected] = useState<boolean>(false)
   const openModal = useAppSelector(IsOpenModal);
   const dispatch = useAppDispatch();
 
@@ -36,7 +37,8 @@ const CalendarApp = () => {
   };
 
   const oneClick = (event: EventNote) => {
-    // console.log(event);
+    dispatch(setActiveNote(event));
+    
   };
 
   const viewChange = (event: string) => {
@@ -87,6 +89,10 @@ const CalendarApp = () => {
         </Modal>
       )}
       <ButtonNewNote />
+      
+     
+      <ButtonDelete/>
+    
     </section>
   );
 };

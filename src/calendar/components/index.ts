@@ -1,3 +1,4 @@
 import CalendarEvent from "./CalendarEvent";
 import ButtonNewNote from "./ButtonNewNote";
-export { CalendarEvent, ButtonNewNote };
+import ButtonDelete from "./ButtonDelete";
+export { CalendarEvent, ButtonNewNote, ButtonDelete };
