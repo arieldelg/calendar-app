@@ -81,10 +81,10 @@ const Note = () => {
     const noteData = {
       text,
       title,
-      start: new Date(start),
-      end: new Date(end),
+      start,
+      end
     };
-
+    console.log(noteData)
     if (data) {
       const updatedData = {
         ...data,
@@ -92,11 +92,10 @@ const Note = () => {
       };
 
       dispatch(startUpdatingNote(updatedData));
-      console.log("no entro");
       return;
     }
 
-    dispatch(startSavingNote(noteData as unknown as FormValues));
+    dispatch(startSavingNote(noteData as { text: string, title: string, start: number, end: number}));
   };
 
   return (

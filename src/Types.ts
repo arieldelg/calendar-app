@@ -11,9 +11,9 @@ export enum VariablesAuth {
 }
 
 export interface FormValues {
-  endDate: Date;
+  end: Date;
   text: string;
-  startDate: Date;
+  start: Date;
   title: string;
 }
 

@@ -21,7 +21,7 @@ const useCalendarEvent = (): {
   const createNewForm = () => {
     dispatch(newNote());
   };
-  console.log(events);
+
   const eventsData = async () => {
     try {
       const {
@@ -35,7 +35,7 @@ const useCalendarEvent = (): {
         element.end = new Date(element.end);
         return element;
       });
-
+      console.log(data, 'data')
       dispatch(getEvents(data));
     } catch (error) {
       console.log(error);

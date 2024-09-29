@@ -1,27 +1,31 @@
 import { calendarApi } from "../../api";
-import { EventNote, FormValues } from "../../Types";
+import { EventNote } from "../../Types";
 import { saveEvent, updateEvent } from "../slices/calendarSlice";
 import { closeUI } from "../slices/uiSlice";
 
-export const startSavingNote = (note: FormValues) => {
+export const startSavingNote = (note: { text: string, title: string, start: number, end: number}) => {
   return async (
-    dispatch: (arg0: {
-      payload: EventNote | undefined;
-      type: "ui/closeUI" | "calendar/saveEvent";
-    }) => void
+    dispatch: (arg0: { payload: EventNote | undefined; type: "ui/closeUI" | "calendar/saveEvent"; }) => void,
   ) => {
+    
     try {
       const {
         data: { data },
-      } = await calendarApi.post("/calendarEvents/new", note);
+      } = await calendarApi.post("/calendarEvents/new", note) as {data: { data: EventNote } };
 
-      dispatch(saveEvent(data));
+      const convertDataDate = {
+        ...data,
+        start: new Date(data.start),
+        end: new Date(data.end)
+      }
+      dispatch(saveEvent(convertDataDate));
       dispatch(closeUI());
     } catch (error) {
       console.log(error);
     }
   };
 };
+
 
 export const startUpdatingNote = (note: EventNote) => {
   return async (
