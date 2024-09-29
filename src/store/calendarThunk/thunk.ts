@@ -34,10 +34,16 @@ export const startUpdatingNote = (note: EventNote) => {
       type: "calendar/updateEvent" | "ui/closeUI";
     }) => void
   ) => {
+    const convertDataDate = {
+      ...note,
+      start: new Date(note.start),
+      end: new Date(note.end)
+    }
     try {
       await calendarApi.put(`/calendarEvents/update/${note._id}`, note);
 
-      dispatch(updateEvent(note));
+
+      dispatch(updateEvent(convertDataDate));
     } catch (error) {
       console.log(error);
     }

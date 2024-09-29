@@ -31,7 +31,7 @@ const CalendarApp = () => {
   const { events, eventsData } = useCalendarEvent();
 
   const doubleClick = (event: EventNote) => {
-    console.log("double click", event);
+    // console.log("double click", event);
     dispatch(setActiveNote(event));
     dispatch(openUI());
   };
@@ -59,7 +59,6 @@ const CalendarApp = () => {
   };
 
   useEffect(() => {
-    console.log("hola");
 
     eventsData();
   }, []);
