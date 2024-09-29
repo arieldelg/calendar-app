@@ -100,11 +100,11 @@ const Note = () => {
 
   return (
     <section
-      className="text-black flex items-center justify-center w-full h-full bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10  "
+      className="text-black flex items-center justify-center w-full h-full bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 "
       onClick={() => closeModal()}
     >
       <div
-        className="w-4/6 h-5/6 bg-white rounded-md ring-2 p-4 font-mono font-bold grid grid-rows-[50px_auto] md:grid-rows-[100px_auto] overflow-scroll scrollbar"
+        className="w-4/6 h-5/6 bg-white rounded-md ring-2 p-4 font-mono font-bold grid grid-rows-[50px_auto] md:grid-rows-[50px_auto] overflow-scroll scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full h-full">
@@ -123,7 +123,7 @@ const Note = () => {
               </p>
             ) : null}
 
-            <div className="w-full h-60  flex flex-col justify-between">
+            <div className="w-full h-auto  flex flex-col justify-center gap-4">
               <div className="flex flex-col py-2 gap-1">
                 <label className="text-xl ">Fecha y hora inicio</label>
                 <DatePicker

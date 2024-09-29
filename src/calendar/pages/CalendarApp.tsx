@@ -31,13 +31,12 @@ const CalendarApp = () => {
   const { events, eventsData } = useCalendarEvent();
 
   const doubleClick = (event: EventNote) => {
-    // console.log("double click", event);
     dispatch(setActiveNote(event));
     dispatch(openUI());
   };
 
   const oneClick = (event: EventNote) => {
-    console.log(event);
+    // console.log(event);
   };
 
   const viewChange = (event: string) => {
