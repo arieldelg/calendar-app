@@ -5,7 +5,7 @@ import { es } from "date-fns/locale/es";
 import useUiStore from "../../hooks/useUiStore";
 import useCalendarEvent from "../../hooks/useCalendarEvent";
 import { addHours, differenceInSeconds } from "date-fns";
-import { EventNote, FormValues } from "../../Types";
+import { FormValues } from "../../Types";
 import { useAppDispatch } from "../../store/hooks";
 import {
   startSavingNote,
@@ -16,7 +16,7 @@ registerLocale("es", es);
 const Note = () => {
   const dispatch = useAppDispatch();
   const { closeModal } = useUiStore();
-  const { data } = useCalendarEvent() as unknown as { data: EventNote };
+  const { data, createNewForm } = useCalendarEvent();
 
   const [error, setError] = useState<{
     ok: boolean;
@@ -82,9 +82,9 @@ const Note = () => {
       text,
       title,
       start,
-      end
+      end,
     };
-    console.log(noteData)
+
     if (data) {
       const updatedData = {
         ...data,
@@ -92,19 +92,32 @@ const Note = () => {
       };
 
       dispatch(startUpdatingNote(updatedData));
+
       return;
     }
 
-    dispatch(startSavingNote(noteData as { text: string, title: string, start: number, end: number}));
+    dispatch(
+      startSavingNote(
+        noteData as {
+          text: string;
+          title: string;
+          start: number;
+          end: number;
+        }
+      )
+    );
   };
 
   return (
     <section
-      className="text-black flex items-center justify-center w-full h-full bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 "
-      onClick={() => closeModal()}
+      className="text-black flex items-center justify-center w-full h-full bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10  "
+      onClick={() => {
+        createNewForm();
+        closeModal();
+      }}
     >
       <div
-        className="w-4/6 h-5/6 bg-white rounded-md ring-2 p-4 font-mono font-bold grid grid-rows-[50px_auto] md:grid-rows-[50px_auto] overflow-scroll scrollbar"
+        className="w-4/6 h-5/6 bg-white rounded-md ring-2 p-4 font-mono font-bold grid grid-rows-[50px_auto] md:grid-rows-[100px_auto] overflow-scroll scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full h-full">
@@ -123,7 +136,7 @@ const Note = () => {
               </p>
             ) : null}
 
-            <div className="w-full h-auto  flex flex-col justify-center gap-4">
+            <div className="w-full h-60  flex flex-col justify-between">
               <div className="flex flex-col py-2 gap-1">
                 <label className="text-xl ">Fecha y hora inicio</label>
                 <DatePicker

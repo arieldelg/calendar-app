@@ -25,7 +25,6 @@ export interface DataEvent {
 
 const CalendarApp = () => {
   const [view] = useState(localStorage.getItem("lastView") || "week");
-  const [selected, setSelected] = useState<boolean>(false)
   const openModal = useAppSelector(IsOpenModal);
   const dispatch = useAppDispatch();
 
@@ -38,7 +37,6 @@ const CalendarApp = () => {
 
   const oneClick = (event: EventNote) => {
     dispatch(setActiveNote(event));
-    
   };
 
   const viewChange = (event: string) => {
@@ -60,8 +58,8 @@ const CalendarApp = () => {
   };
 
   useEffect(() => {
-
     eventsData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -89,10 +87,8 @@ const CalendarApp = () => {
         </Modal>
       )}
       <ButtonNewNote />
-      
-     
-      <ButtonDelete/>
-    
+
+      <ButtonDelete />
     </section>
   );
 };
